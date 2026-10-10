@@ -2,6 +2,7 @@
 
 from fastmcp import FastMCP
 from fastapi import FastAPI
+from fastmcp.exceptions import ToolError
 
 RECIPES = {
     1: {"title": "Weeknight Pasta", "minutes": 20, "tags": ["quick", "vegetarian"]},
@@ -22,7 +23,7 @@ def list_reciepes()->list[dict]:
 def get_recipe(recipe_id: int) -> dict:
     """Get the full detail for one recipe by id."""
     if recipe_id not in RECIPES:
-        raise ValueError(f"No recipe with id {recipe_id}")
+        raise ToolError(f"No recipe with id {recipe_id}")
     return RECIPES[recipe_id]
 
 @mcp.tool()
