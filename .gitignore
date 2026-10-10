@@ -8,3 +8,5 @@ wheels/
 
 # Virtual environments
 .venv
+
+reciepebox_server_creation_lowlevel.py
