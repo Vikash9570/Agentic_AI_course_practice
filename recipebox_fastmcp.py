@@ -1,4 +1,5 @@
 from fastmcp import FastMCP
+from fastapi import FastAPI
 
 RECIPES = {
     1: {"title": "Weeknight Pasta", "minutes": 20, "tags": ["quick", "vegetarian"]},
@@ -6,7 +7,7 @@ RECIPES = {
     3: {"title": "Five-Minute Salsa", "minutes": 5, "tags": ["quick", "vegan"]},
 }
 
-print(RECIPES.items())
+# print(RECIPES.items())
 
 mcp = FastMCP("ReciepeBox_Updated")
 @mcp.tool()
@@ -50,11 +51,17 @@ def send_email() -> str:
 
 # for hosting it to versal, creates an HTTP application that another ASGI server or compatible hosting integration can serve.
 mcp_app = mcp.http_app(path="/")  
+# app.mount("/mcp", mcp_app)
 
+# Create the ASGI application that Vercel will serve.
+app = FastAPI(lifespan=mcp_app.lifespan)
+
+# Expose MCP at /mcp.
+app.mount("/mcp", mcp_app)
 
 #  server hosting
 if __name__ == "__main__":
     mcp.run()
-    # mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)  for streamable http
+    mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)  #for streamable http
 
 
